@@ -1,5 +1,5 @@
 import { css } from 'styled-components'
-import { StyledStarterKit } from '../extensions/StarterKit/style'
+import { StyledStarterKit } from './StarterKit/style'
 
 export const StyledExtensions = css`
   ${StyledStarterKit}

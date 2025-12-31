@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { FullScreenPlayground } from './FullScreenPlayground'
 import { ResizablePlayground } from './ResizablePlayground'
+import { data } from '../../mock/markdownData'
 
 const AppShell = styled.main`
   min-height: 100vh;
@@ -58,15 +59,6 @@ const Subtitle = styled.p`
 
 type PlaygroundMode = 'fullscreen' | 'nested'
 
-const sampleContent = `
-<h2>Markdown Widget</h2>
-<p>This is the shell of your exported component. Use it to surface structured text, inline code, and rich hints.</p>
-<ul>
-  <li>React + TypeScript + styled-components</li>
-  <li>Playground logic stays in dev mode, never bundled</li>
-</ul>
-`
-
 export const PlaygroundApp = () => {
   const [mode, setMode] = useState<PlaygroundMode>('fullscreen')
   const [theme, setTheme] = useState<'light' | 'dark'>('light')
@@ -95,9 +87,9 @@ export const PlaygroundApp = () => {
       </SwitchRow>
       <Subtitle>{description}</Subtitle>
       {mode === 'fullscreen' ? (
-        <FullScreenPlayground content={sampleContent} theme={theme} />
+        <FullScreenPlayground content={data} theme={theme} />
       ) : (
-        <ResizablePlayground content={sampleContent} theme={theme} />
+        <ResizablePlayground content={data} theme={theme} />
       )}
     </AppShell>
   )

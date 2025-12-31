@@ -3,6 +3,7 @@ import { Editor, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
 import { StyledMarkdownEditor } from './StyledMarkdownEditor'
+import { CustomExtensions } from '../components/extensions/extensions'
 interface MarkdownEditorProps {
   content: string
   isFullScreen: boolean
@@ -21,7 +22,7 @@ export const MarkdownEditor = ({
   onUpdate,
 }: MarkdownEditorProps) => {
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [...CustomExtensions],
     content,
     onUpdate: ({ editor }) => {
       onUpdate?.(editor)

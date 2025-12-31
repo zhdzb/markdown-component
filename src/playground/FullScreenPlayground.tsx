@@ -7,12 +7,9 @@ const Stage = styled.section`
   width: 100%;
   min-height: 80vh;
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
-  background:
-    radial-gradient(circle at top right, rgba(107, 70, 193, 0.25), transparent 40%),
-    radial-gradient(circle at 30% 0, rgba(34, 197, 94, 0.15), transparent 45%), #0f172a;
-  color: #f8fafc;
+  /* color: #f8fafc; */
   margin-bottom: 2rem;
   padding: 2rem;
   border-radius: 24px;

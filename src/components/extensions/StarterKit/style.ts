@@ -6,7 +6,7 @@ export const StyledStarterKit = css`
     list-style-position: outside;
     margin-left: 1em;
     line-height: 0.75rem; /* leading-3 */
-    margin-top: -0.5rem; /* -mt-2 */
+    margin-top: -0.5rem; -mt-2
   }
 
   .tp-ordered-list {

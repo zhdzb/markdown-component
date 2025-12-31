@@ -43,6 +43,7 @@
     "@tiptap/extension-node-range": "^3.0.7",
     "@tiptap/extension-table": "^3.10.4",
     "@tiptap/extension-text-align": "^3.0.7",
+    "@tiptap/suggestion": "^3.0.7",
     "mermaid": "^10.9.4"
   },
   "devDependencies": {

@@ -1,6 +1,11 @@
 export const data = `
 # 在线简历工具增值服务方案.md
 
+
+\`\`\`
+  code
+\`\`\`
+
 <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 10px; color: white; text-align: center; margin-bottom: 30px;">
 <h1 style="color: white; margin: 0; font-size: 2.5em;">在线简历工具增值服务方案</h1>
 <p style="color: white; opacity: 0.9; font-size: 1.2em;">基于行业深度分析的差异化付费功能与商业化策略</p>
