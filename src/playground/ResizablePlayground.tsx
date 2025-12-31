@@ -51,7 +51,10 @@ const Hint = styled.div`
   color: #475569;
 `
 
-export const ResizablePlayground: React.FC<{ content: string }> = ({ content }) => {
+export const ResizablePlayground: React.FC<{ content: string; theme: 'light' | 'dark' }> = ({
+  content,
+  theme,
+}) => {
   const [scale, setScale] = useState(1)
 
   const frameRef = useRef<HTMLDivElement>(null)
@@ -88,7 +91,7 @@ export const ResizablePlayground: React.FC<{ content: string }> = ({ content }) 
       </Hint>
       <Frame ref={frameRef}>
         <ScaledView scale={scale}>
-          <MarkdownDisplay content={content} />
+          <MarkdownDisplay content={content} theme={theme} />
         </ScaledView>
       </Frame>
     </Container>

@@ -5,7 +5,7 @@ import { MarkdownDisplay } from '../components/MarkdownDisplay'
 const Stage = styled.section`
   position: relative;
   width: 100%;
-  min-height: 60vh;
+  min-height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,12 +30,13 @@ const Hint = styled.p`
 
 export interface FullScreenPlaygroundProps {
   content: string
+  theme: 'light' | 'dark'
 }
 
-export const FullScreenPlayground: React.FC<FullScreenPlaygroundProps> = ({ content }) => {
+export const FullScreenPlayground: React.FC<FullScreenPlaygroundProps> = ({ content, theme }) => {
   return (
     <Stage>
-      <MarkdownDisplay content={content} highlight />
+      <MarkdownDisplay content={content} theme={theme} />
       <Hint>Full screen mode — the component stretches with the viewport.</Hint>
     </Stage>
   )

@@ -27,10 +27,10 @@ const SwitchRow = styled.div`
   justify-content: center;
 `
 
-const ModeButton = styled.button<{ active?: boolean }>`
-  background: ${({ active }) => (active ? '#312e81' : '#ffffff')};
-  color: ${({ active }) => (active ? '#f8fafc' : '#312e81')};
-  border: 1px solid ${({ active }) => (active ? '#312e81' : '#c7d2fe')};
+const ModeButton = styled.button`
+  background: #312e81;
+  color: #f8fafc;
+  border: 1px solid #312e81;
   border-radius: 999px;
   padding: 0.65rem 1.5rem;
   font-size: 0.95rem;
@@ -40,7 +40,12 @@ const ModeButton = styled.button<{ active?: boolean }>`
     color 0.2s ease;
 
   &:hover {
-    background: ${({ active }) => (active ? '#2e2bb7' : '#e0e7ff')};
+    background: #2e2bb7;
+  }
+  &:disabled {
+    background: #94a3b8;
+    border-color: #94a3b8;
+    cursor: not-allowed;
   }
 `
 
@@ -64,6 +69,7 @@ const sampleContent = `
 
 export const PlaygroundApp = () => {
   const [mode, setMode] = useState<PlaygroundMode>('fullscreen')
+  const [theme, setTheme] = useState<'light' | 'dark'>('light')
   const description = useMemo(
     () =>
       mode === 'fullscreen'
@@ -74,21 +80,24 @@ export const PlaygroundApp = () => {
 
   return (
     <AppShell>
-      <Title>组件 Playground</Title>
-      <Subtitle>切换以下模式以验证组件在不同容器下的表现。</Subtitle>
+      <Title>Markdown Editor Playground</Title>
+      <Subtitle>模拟proto中Markdown编辑器的使用场景</Subtitle>
       <SwitchRow>
-        <ModeButton active={mode === 'fullscreen'} onClick={() => setMode('fullscreen')}>
+        <ModeButton disabled={mode === 'fullscreen'} onClick={() => setMode('fullscreen')}>
           全屏模式
         </ModeButton>
-        <ModeButton active={mode === 'nested'} onClick={() => setMode('nested')}>
+        <ModeButton disabled={mode === 'nested'} onClick={() => setMode('nested')}>
           可缩放嵌套模式
+        </ModeButton>
+        <ModeButton onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+          {theme === 'light' ? 'dark' : 'light'}
         </ModeButton>
       </SwitchRow>
       <Subtitle>{description}</Subtitle>
       {mode === 'fullscreen' ? (
-        <FullScreenPlayground content={sampleContent} />
+        <FullScreenPlayground content={sampleContent} theme={theme} />
       ) : (
-        <ResizablePlayground content={sampleContent} />
+        <ResizablePlayground content={sampleContent} theme={theme} />
       )}
     </AppShell>
   )
