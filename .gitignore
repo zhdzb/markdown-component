@@ -1,0 +1,8 @@
+node_modules/
+dist/
+playground-dist/
+.rsbuild/
+npm-debug.log*
+yarn.lock
+.DS_Store
+
