@@ -3,6 +3,7 @@ import { CustomHeading } from './Heading'
 import { SlashCommand } from './SlashCommand'
 import { getSuggestion } from './SlashCommand/suggestion'
 import { CustomTable, CustomTableHeader, CustomTableCell, CustomTableRow } from './table'
+import { PasteMarkdown } from './PasteMarkdown'
 
 export const CustomExtensions = [
   CustomStarterKit,
@@ -10,6 +11,7 @@ export const CustomExtensions = [
   SlashCommand.configure({
     suggestion: getSuggestion(),
   }),
+  PasteMarkdown,
   CustomTable.configure({
     lastColumnResizable: false,
     allowTableNodeSelection: true,
