@@ -6,6 +6,7 @@ import { StyledMarkdownEditor } from './StyledMarkdownEditor'
 import { CustomExtensions } from '../components/extensions/extensions'
 import { markdownToHtml } from '../utils/markdown'
 import { isMarkdownString } from '../utils/isMarkdownString'
+import { TableHandle } from '../components/Menu/TableMenu'
 interface MarkdownEditorProps {
   content: string
   isFullScreen: boolean
@@ -50,6 +51,7 @@ export const MarkdownEditor = ({
   return (
     <>
       <StyledMarkdownEditor editor={editor} />
+      <TableHandle editor={editor} />
     </>
   )
 }
