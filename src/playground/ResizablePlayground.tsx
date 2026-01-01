@@ -28,14 +28,23 @@ const Frame = styled.div`
   box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.06);
 `
 
-const ScaledView = styled.div<{ scale: number }>`
+const ScrollContainer = styled.div`
   width: 100%;
   height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+`
+
+const ScaledView = styled.div<{ scale: number }>`
+  width: 100%;
+  min-height: 100%;
   transform-origin: top left;
   transform: scale(${({ scale }) => scale});
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  padding-left: 3rem; /* Add padding for DragHandle */
+  padding-right: 1rem;
 `
 
 const ScaleIndicator = styled.span`
@@ -84,15 +93,23 @@ export const ResizablePlayground: React.FC<{ content: string; theme: 'light' | '
   const info = useMemo(() => `Scale ${Math.round(scale * 100)}%`, [scale])
 
   return (
-    <Container>
+    <Container onClick={() => console.log('Canvas Clicked')}>
       <Hint>
         <span>Nested mode with resize/scale controls</span>
         <ScaleIndicator>{info}</ScaleIndicator>
       </Hint>
-      <Frame ref={frameRef}>
-        <ScaledView scale={scale}>
-          <MarkdownDisplay content={content} theme={theme} />
-        </ScaledView>
+      <Frame
+        ref={frameRef}
+        onClick={e => {
+          e.stopPropagation()
+          console.log('Editor Frame Clicked')
+        }}
+      >
+        <ScrollContainer>
+          <ScaledView scale={scale}>
+            <MarkdownDisplay content={content} theme={theme} />
+          </ScaledView>
+        </ScrollContainer>
       </Frame>
     </Container>
   )
