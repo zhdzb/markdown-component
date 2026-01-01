@@ -29,6 +29,8 @@ import {
   TableMenuHandleProps,
   TableSelectionOverlay,
   TableSelectionOverlayProps,
+  getIsFirstOrLastRow,
+  getIsFirstOrLastColumn,
 } from '../../extensions/table'
 
 interface CellMenusState {
@@ -39,6 +41,7 @@ interface CellMenusState {
 
 const ColumnMenuPopover = ({ editor }: { editor: Editor }) => {
   const [opened, setOpened] = useState(false)
+  const { isFirstColumn = false, isLastColumn = false } = getIsFirstOrLastColumn(editor as Editor)
   return (
     <DropdownMenu
       modal
@@ -64,6 +67,25 @@ const ColumnMenuPopover = ({ editor }: { editor: Editor }) => {
         // }}
       >
         <DropdownMenuGroup>
+          {!isFirstColumn && (
+            <DropdownMenuItem
+              onClick={() => {
+                ;(editor.chain().focus() as any).moveColumnLeft().run()
+              }}
+            >
+              Move column left
+            </DropdownMenuItem>
+          )}
+          {!isLastColumn && (
+            <DropdownMenuItem
+              onClick={() => {
+                ;(editor.chain().focus() as any).moveColumnRight().run()
+              }}
+            >
+              Move column right
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
               editor.chain().focus().addColumnBefore().run()
@@ -94,6 +116,7 @@ const ColumnMenuPopover = ({ editor }: { editor: Editor }) => {
 
 const RowMenuPopover = ({ editor }: { editor: Editor }) => {
   const [opened, setOpened] = useState(false)
+  const { isFirstRow = false, isLastRow = false } = getIsFirstOrLastRow(editor as Editor)
   return (
     <DropdownMenu
       modal
@@ -114,6 +137,25 @@ const RowMenuPopover = ({ editor }: { editor: Editor }) => {
       </StyledRowMenuTrigger>
       <StyledTableMenuContent align="start" side="right">
         <DropdownMenuGroup>
+          {!isFirstRow && (
+            <DropdownMenuItem
+              onClick={() => {
+                ;(editor.chain().focus() as any).moveRowUp().run()
+              }}
+            >
+              Move row up
+            </DropdownMenuItem>
+          )}
+          {!isLastRow && (
+            <DropdownMenuItem
+              onClick={() => {
+                ;(editor.chain().focus() as any).moveRowDown().run()
+              }}
+            >
+              Move row down
+            </DropdownMenuItem>
+          )}
+          {(!isFirstRow || !isLastRow) && <DropdownMenuSeparator />}
           <DropdownMenuItem
             onClick={() => {
               editor.chain().focus().addRowBefore().run()
@@ -328,6 +370,7 @@ export const TableHandle = ({ editor }: { editor: Editor | null }) => {
   }, [editor])
 
   const tableSelectionOverlayProps = useMemo(() => {
+    console.log('tableSelectionOverlayProps', editor)
     if (!editor) {
       return undefined
     }

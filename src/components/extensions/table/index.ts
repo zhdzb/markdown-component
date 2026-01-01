@@ -5,3 +5,5 @@ export * from './tableMenuHandle'
 
 export * from './plugins/tableSelectionOverlayPlugin'
 export * from './tableSelectionOverlay'
+
+export * from './utils'

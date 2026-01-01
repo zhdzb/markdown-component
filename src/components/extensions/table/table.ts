@@ -1,6 +1,8 @@
 import { createColGroup, Table, TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
 import { DOMOutputSpec, DOMSerializer } from '@tiptap/pm/model'
 import { mergeAttributes } from '@tiptap/react'
+import type { Command } from '@tiptap/core'
+import { moveColumn, moveRow } from './utils'
 
 export const CustomTable = Table.extend({
   renderHTML({ node, HTMLAttributes }) {
@@ -76,6 +78,28 @@ export const CustomTable = Table.extend({
           return true
         },
       }
+    }
+  },
+
+  addCommands() {
+    return {
+      ...this.parent?.(),
+      moveColumnLeft:
+        (): Command =>
+        ({ state, dispatch }) =>
+          moveColumn(state, dispatch, 'left'),
+      moveColumnRight:
+        (): Command =>
+        ({ state, dispatch }) =>
+          moveColumn(state, dispatch, 'right'),
+      moveRowUp:
+        (): Command =>
+        ({ state, dispatch }) =>
+          moveRow(state, dispatch, 'up'),
+      moveRowDown:
+        (): Command =>
+        ({ state, dispatch }) =>
+          moveRow(state, dispatch, 'down'),
     }
   },
 })
