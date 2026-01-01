@@ -8,6 +8,8 @@ import { markdownToHtml } from '../utils/markdown'
 import { isMarkdownString } from '../utils/isMarkdownString'
 import { TableHandle } from '../components/Menu/TableMenu'
 import { DefaultBubbleMenu } from '@/components/Menu/BubbleMenu'
+import { GlobalDragHandle } from '../components/extensions/DragHandle'
+
 interface MarkdownEditorProps {
   content: string
   isFullScreen: boolean
@@ -53,6 +55,7 @@ export const MarkdownEditor = ({
     <>
       <StyledMarkdownEditor editor={editor} />
       <TableHandle editor={editor} />
+      <GlobalDragHandle editor={editor} />
       <DefaultBubbleMenu editor={editor} />
     </>
   )
