@@ -31,7 +31,13 @@ import {
   TableSelectionOverlayProps,
   getIsFirstOrLastRow,
   getIsFirstOrLastColumn,
+  TableAddHandle,
+  TableAddHandleProps,
+  rowAddPluginKey,
+  columnAddPluginKey,
+  tableSelectionOverlayPluginKey,
 } from '../../extensions/table'
+import { StyledTableAddHandle } from './style'
 
 interface CellMenusState {
   canMergeCell: boolean
@@ -380,6 +386,36 @@ export const TableHandle = ({ editor }: { editor: Editor | null }) => {
     } satisfies TableSelectionOverlayProps['pluginProps']
   }, [editor])
 
+  const rowAddPluginProps = useMemo(() => {
+    if (!editor) {
+      return undefined
+    }
+    return {
+      editor,
+      menuType: 'row',
+      pluginKey: rowAddPluginKey,
+      options: {
+        placement: 'bottom',
+        offset: 8,
+      },
+    } satisfies TableAddHandleProps['pluginProps']
+  }, [editor])
+
+  const columnAddPluginProps = useMemo(() => {
+    if (!editor) {
+      return undefined
+    }
+    return {
+      editor,
+      menuType: 'column',
+      pluginKey: columnAddPluginKey,
+      options: {
+        placement: 'right',
+        offset: 8,
+      },
+    } satisfies TableAddHandleProps['pluginProps']
+  }, [editor])
+
   if (!editor) {
     return null
   }
@@ -401,6 +437,108 @@ export const TableHandle = ({ editor }: { editor: Editor | null }) => {
         <TableSelectionOverlay pluginProps={tableSelectionOverlayProps}>
           <CellMenuPopover editor={editor} />
         </TableSelectionOverlay>
+      )}
+
+      {rowAddPluginProps && (
+        <TableAddHandle pluginProps={rowAddPluginProps}>
+          <StyledTableAddHandle
+            onClick={() => {
+              const pluginState = rowAddPluginKey.getState(editor.state)
+              const currentTablePos = pluginState?.currentTablePos
+              if (typeof currentTablePos === 'number') {
+                const tr = editor.state.tr
+                const tableNode = editor.state.doc.nodeAt(currentTablePos)
+                if (tableNode) {
+                  const tableEndPos = currentTablePos + tableNode.content.size
+                  // Move cursor to the end of the table to ensure we add row to this table
+                  // Actually, addRowAfter usually works on selection.
+                  // We can try to set selection to the last cell of the table
+                  const lastCellPos = currentTablePos + tableNode.nodeSize - 2 // Approximate last cell
+                  // Better: find last cell
+                  // We can manually insert a row at the end of the table without changing selection visually first?
+                  // Or just set selection to table and call addRowAfter
+
+                  // Let's set selection to the end of the table to be safe
+                  // editor.chain().setTextSelection(tableEndPos).addRowAfter().run()
+                  // But we don't want to change selection if possible or at least not focus it weirdly
+                  // If we use command, we can target specific table if the command supports it, but default addRowAfter uses selection.
+
+                  // Let's try to set selection to the last cell of this specific table
+                  // find last cell inside table
+                  let lastCellPosResolved = -1
+                  editor.state.doc.nodesBetween(
+                    currentTablePos,
+                    currentTablePos + tableNode.nodeSize,
+                    (node, pos) => {
+                      if (node.type.name === 'tableCell' || node.type.name === 'tableHeader') {
+                        lastCellPosResolved = pos
+                      }
+                    }
+                  )
+
+                  if (lastCellPosResolved !== -1) {
+                    editor
+                      .chain()
+                      .command(({ tr }) => {
+                        tr.setMeta(tableSelectionOverlayPluginKey, { suppress: true })
+                        tr.setMeta('table-selection-overlay-suppress', true)
+                        return true
+                      })
+                      .setTextSelection(lastCellPosResolved + 1)
+                      .addRowAfter()
+                      .blur()
+                      .run()
+                  }
+                }
+              }
+            }}
+          >
+            +
+          </StyledTableAddHandle>
+        </TableAddHandle>
+      )}
+
+      {columnAddPluginProps && (
+        <TableAddHandle pluginProps={columnAddPluginProps}>
+          <StyledTableAddHandle
+            onClick={() => {
+              const pluginState = columnAddPluginKey.getState(editor.state)
+              const currentTablePos = pluginState?.currentTablePos
+              if (typeof currentTablePos === 'number') {
+                const tableNode = editor.state.doc.nodeAt(currentTablePos)
+                if (tableNode) {
+                  // Find the last cell to ensure we are in the right table
+                  let lastCellPosResolved = -1
+                  editor.state.doc.nodesBetween(
+                    currentTablePos,
+                    currentTablePos + tableNode.nodeSize,
+                    (node, pos) => {
+                      if (node.type.name === 'tableCell' || node.type.name === 'tableHeader') {
+                        lastCellPosResolved = pos
+                      }
+                    }
+                  )
+
+                  if (lastCellPosResolved !== -1) {
+                    editor
+                      .chain()
+                      .command(({ tr }) => {
+                        tr.setMeta(tableSelectionOverlayPluginKey, { suppress: true })
+                        tr.setMeta('table-selection-overlay-suppress', true)
+                        return true
+                      })
+                      .setTextSelection(lastCellPosResolved + 1)
+                      .addColumnAfter()
+                      .blur()
+                      .run()
+                  }
+                }
+              }
+            }}
+          >
+            +
+          </StyledTableAddHandle>
+        </TableAddHandle>
       )}
     </>
   )

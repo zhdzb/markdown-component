@@ -108,3 +108,20 @@ export const StyledDestructiveMenuItem = styled(DropdownMenuItem)`
     color: var(--destructive);
   }
 `
+
+export const StyledTableAddHandle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--secondary);
+  color: var(--secondary-foreground);
+  border-radius: calc(var(--radius) - 2px);
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  pointer-events: auto;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--secondary) 70%, transparent);
+  }
+`

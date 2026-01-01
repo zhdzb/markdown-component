@@ -28,6 +28,8 @@ export interface TableSelectionOverlayPluginProps {
   options?: FloatingUIOptionsProps
 }
 
+export const tableSelectionOverlayPluginKey = new PluginKey('table-selection-overlay')
+
 export const TableSelectionOverlayPlugin = ({
   pluginKey,
   editor,
@@ -240,10 +242,27 @@ export const TableSelectionOverlayPlugin = ({
 
   return new Plugin({
     key: pluginKey,
+    state: {
+      init: () => ({ suppress: false }),
+      apply: (tr) => {
+        const meta = tr.getMeta(pluginKey) || tr.getMeta('table-selection-overlay-suppress')
+        if (meta?.suppress || meta === true) {
+          return { suppress: true }
+        }
+        return { suppress: false }
+      },
+    },
     view: () => {
       window.addEventListener('resize', handleResize)
       return {
         update: (view, prevState) => {
+          const pluginState = pluginKey.getState(view.state)
+          if (pluginState?.suppress) {
+            console.log('1111')
+            hideOverlay()
+            return
+          }
+
           const selectionChanged = !prevState?.selection.eq(view.state.selection)
           const docChanged = !prevState?.doc.eq(view.state.doc)
 

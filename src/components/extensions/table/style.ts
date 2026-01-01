@@ -39,7 +39,7 @@ export const StyledTable = css`
   .tp-table-wrapper-no-scroll-y {
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 1rem;
+    padding: 1em 2em 2em 1em;
     margin-left: -1rem;
     position: relative;
   }
