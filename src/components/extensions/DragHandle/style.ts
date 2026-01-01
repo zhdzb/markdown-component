@@ -7,6 +7,7 @@ export const HandleContainer = styled.div`
   border-radius: 0.25rem;
   transition: opacity 0.2s;
   padding-right: 0.25rem;
+  z-index: 50;
 `
 
 export const ActionButton = styled.button`

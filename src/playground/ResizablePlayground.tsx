@@ -43,7 +43,7 @@ const ScaledView = styled.div<{ scale: number }>`
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding-left: 3rem; /* Add padding for DragHandle */
+  padding-left: 1rem;
   padding-right: 1rem;
 `
 

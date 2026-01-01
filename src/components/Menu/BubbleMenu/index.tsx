@@ -15,6 +15,8 @@ export const DefaultBubbleMenu = ({ editor }: { editor: Editor | null }) => {
   return (
     <BubbleMenu
       editor={editor}
+      pluginKey="bubbleMenu"
+      appendTo={document.body}
       options={{
         placement: 'top',
         offset: 8,
