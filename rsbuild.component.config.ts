@@ -13,6 +13,9 @@ export default defineConfig({
       index: resolve(root, 'src', 'index.ts'),
     },
     tsconfigPath: resolve(root, 'tsconfig.json'),
+    alias: {
+      '@': resolve(root, 'src'),
+    },
   },
   output: {
     distPath: resolve(root, 'dist'),

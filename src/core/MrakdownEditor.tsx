@@ -7,6 +7,7 @@ import { CustomExtensions } from '../components/extensions/extensions'
 import { markdownToHtml } from '../utils/markdown'
 import { isMarkdownString } from '../utils/isMarkdownString'
 import { TableHandle } from '../components/Menu/TableMenu'
+import { DefaultBubbleMenu } from '@/components/Menu/BubbleMenu'
 interface MarkdownEditorProps {
   content: string
   isFullScreen: boolean
@@ -52,6 +53,7 @@ export const MarkdownEditor = ({
     <>
       <StyledMarkdownEditor editor={editor} />
       <TableHandle editor={editor} />
+      <DefaultBubbleMenu editor={editor} />
     </>
   )
 }

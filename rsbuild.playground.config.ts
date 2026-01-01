@@ -1,8 +1,8 @@
-import { resolve } from 'node:path';
-import { defineConfig } from '@rsbuild/core';
-import { pluginReact } from '@rsbuild/plugin-react';
+import { resolve } from 'node:path'
+import { defineConfig } from '@rsbuild/core'
+import { pluginReact } from '@rsbuild/plugin-react'
 
-const root = resolve(__dirname);
+const root = resolve(__dirname)
 
 export default defineConfig({
   root,
@@ -13,6 +13,9 @@ export default defineConfig({
       playground: resolve(root, 'src', 'playground', 'index.tsx'),
     },
     tsconfigPath: resolve(root, 'tsconfig.json'),
+    alias: {
+      '@': resolve(root, 'src'),
+    },
   },
   output: {
     distPath: resolve(root, 'playground-dist'),
@@ -26,5 +29,4 @@ export default defineConfig({
   server: {
     port: 4173,
   },
-});
-
+})

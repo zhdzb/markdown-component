@@ -12,7 +12,11 @@
     "strict": true,
     "declaration": true,
     "declarationDir": "dist/types",
-    "types": ["node"]
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "playground-dist"]

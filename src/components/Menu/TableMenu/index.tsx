@@ -9,7 +9,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from '../../../ui/DropdownMenu'
+} from '@/ui/DropdownMenu'
 import {
   StyledColumnMenuTrigger,
   StyledRowMenuTrigger,
@@ -36,7 +36,7 @@ import {
   rowAddPluginKey,
   columnAddPluginKey,
   tableSelectionOverlayPluginKey,
-} from '../../extensions/table'
+} from '@/components/extensions/table'
 import { StyledTableAddHandle } from './style'
 
 interface CellMenusState {
