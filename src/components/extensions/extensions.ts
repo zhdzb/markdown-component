@@ -4,6 +4,7 @@ import { SlashCommand } from './SlashCommand'
 import { getSuggestion } from './SlashCommand/suggestion'
 import { CustomTable, CustomTableHeader, CustomTableCell, CustomTableRow } from './table'
 import { PasteMarkdown } from './PasteMarkdown'
+import { CustomCodeBlock } from './CodeBlock'
 
 export const CustomExtensions = [
   CustomStarterKit,
@@ -20,4 +21,5 @@ export const CustomExtensions = [
   CustomTableHeader,
   CustomTableCell,
   CustomTableRow,
+  CustomCodeBlock,
 ]

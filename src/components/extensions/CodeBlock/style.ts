@@ -1,33 +1,36 @@
-import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
-import { ReactNodeViewRenderer } from '@tiptap/react'
-// import CodeBlockView from "./CodeBlockView";
+import styled from 'styled-components'
+import { NodeViewWrapper } from '@tiptap/react'
 
-// export const CustomCodeBlock = CodeBlockLowlight.extend({
+export const StyledCodeBlockWrapper = styled(NodeViewWrapper)`
+  .code-container {
+    display: flex;
+    background-color: rgb(247 247 247) !important; /* !bg-gray-800 */
+    color: rgb(53 54 57); /* text-gray-200 */
+    overflow-x: auto;
+    border-radius: 0.25rem; /* rounded */
+    border-width: 0;
+    border-style: solid;
+    border-color: currentColor;
+    font-family:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+      monospace; /* font-mono */
+    font-weight: 500; /* font-medium */
+    font-size: 15px; /* text-[15px] */
+    line-height: 1.5;
 
-//   addKeyboardShortcuts() {
-//     return {
-//       ...this.parent?.(),
+    .dark & {
+      background-color: rgb(17 24 39) !important; /* dark:!bg-gray-900 */
+    }
+  }
 
-//     }
-//   },
+  pre {
+    padding: 0.75rem; /* p-3 */
+    padding-inline-start: 0; /* ps-0 */
+    margin: 0;
+  }
 
-//   addNodeView() {
-//     return ReactNodeViewRenderer(CodeBlockView, {
-//       className: "my-6",
-//     });
-//   },
-
-// });
-
-// const codeBlock = CustomCodeBlock.configure({
-//   HTMLAttributes: {
-//     class: cn(
-//       "rounded !bg-gray-800 dark:!bg-gray-900 text-gray-200 border p-5 font-mono font-medium"
-//     ),
-//     spellcheck: false,
-//   },
-//   enableTabIndentation: true,
-//   tabSize: 2,
-//   defaultLanguage: "plaintext",
-//   lowlight: lowlight,
-// });
+  .node-view-content {
+    white-space: pre !important; /* !text-nowrap -> pre */
+    min-width: 0.25rem; /* min-w-1 */
+  }
+`
