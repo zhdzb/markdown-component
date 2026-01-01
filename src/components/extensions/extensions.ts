@@ -5,10 +5,18 @@ import { getSuggestion } from './SlashCommand/suggestion'
 import { CustomTable, CustomTableHeader, CustomTableCell, CustomTableRow } from './table'
 import { PasteMarkdown } from './PasteMarkdown'
 import { CustomCodeBlock } from './CodeBlock'
+import { Color } from '@tiptap/extension-color'
+import { TextStyle } from '@tiptap/extension-text-style'
+import Highlight from '@tiptap/extension-highlight'
 
 export const CustomExtensions = [
   CustomStarterKit,
   CustomHeading,
+  TextStyle,
+  Color,
+  Highlight.configure({
+    multicolor: true,
+  }),
   SlashCommand.configure({
     suggestion: getSuggestion(),
   }),

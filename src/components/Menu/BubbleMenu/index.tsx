@@ -6,6 +6,7 @@ import { Separator } from '@/ui/Separator'
 import { StyledMenuScrollArea, StyledMenuContent } from './style'
 import { TextButtons } from './Selectors/TextStyle'
 import { TextAlignSelector } from './Selectors/TextAlign'
+import { ColorSelector } from './Selectors/ColorPicker'
 
 export const DefaultBubbleMenu = ({ editor }: { editor: Editor | null }) => {
   if (!editor) {
@@ -49,6 +50,8 @@ export const DefaultBubbleMenu = ({ editor }: { editor: Editor | null }) => {
           <NodeSelector editor={editor} />
           <Separator orientation="vertical" />
           <TextButtons editor={editor} />
+          <Separator orientation="vertical" />
+          <ColorSelector editor={editor} />
           <Separator orientation="vertical" />
           <TextAlignSelector editor={editor} />
         </StyledMenuContent>
