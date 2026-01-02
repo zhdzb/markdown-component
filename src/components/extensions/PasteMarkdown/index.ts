@@ -26,13 +26,13 @@ export const PasteMarkdown = Extension.create({
             // 避免 marked 解析成普通代码块后可能出现的解析问题
             const mermaidRegex = /^\s*```mermaid\s*([\s\S]*?)\s*```\s*$/m
             const matchMermaid = text.match(mermaidRegex)
+            console.log('matchMermaid', matchMermaid)
             if (matchMermaid) {
-              const code = matchMermaid[1]
-              extension.editor.commands.insertContent({
-                type: 'mermaid',
-                attrs: { code: code.trim() },
-              })
-              return true
+              const code = matchMermaid[1].trim()
+              if (code) {
+                extension.editor.commands.setMermaid({ code })
+                return true
+              }
             }
 
             // 1. 优先检测 Markdown 表格

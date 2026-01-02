@@ -29,13 +29,14 @@ export const MarkdownEditor = ({
 }: MarkdownEditorProps) => {
   // 检测 content 是否为 Markdown 格式，如果是则转换为 HTML
   const htmlContent = useMemo(() => {
+    console.log('content=>html', content)
     if (!content) return ''
 
-    // 如果看起来像 Markdown，转换为 HTML
+    // 转换为 HTML
     if (isMarkdownString(content)) {
       return markdownToHtml(content)
     }
-
+    console.log(content)
     // 否则直接返回（可能是 HTML 或空字符串）
     return content
   }, [content])

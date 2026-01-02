@@ -6,6 +6,7 @@ export function isMarkdownString(text: string): boolean {
     /^\s*\d+\.\s/m, // 有序列表
     /^\s*>/m, // 引用
     /```[\s\S]*?```/m, // 代码块
+    /^\s*```mermaid\s*([\s\S]*?)\s*```\s*$/m, // mermaid
     /`[^`]+`/, // 行内代码
     /\[.+\]\(.+\)/, // 链接
     /\*\*[^*]+\*\*/, // 粗体 (**text**)

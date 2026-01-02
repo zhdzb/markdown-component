@@ -8,6 +8,7 @@ import { CustomCodeBlock } from './CodeBlock'
 import { Color } from '@tiptap/extension-color'
 import { TextStyle } from '@tiptap/extension-text-style'
 import Highlight from '@tiptap/extension-highlight'
+import { Mermaid } from './mermaid'
 
 export const CustomExtensions = [
   CustomStarterKit,
@@ -30,4 +31,5 @@ export const CustomExtensions = [
   CustomTableCell,
   CustomTableRow,
   CustomCodeBlock,
+  Mermaid,
 ]
