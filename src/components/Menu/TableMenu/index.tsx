@@ -37,7 +37,7 @@ import {
   columnAddPluginKey,
   tableSelectionOverlayPluginKey,
 } from '@/components/extensions/table'
-import { TableColorSubmenu } from './ColorSubmenu'
+import { ColorPickerSubmenu, AlignSubmenu } from './SubMenu'
 import { StyledTableAddHandle } from './style'
 
 interface CellMenusState {
@@ -108,7 +108,8 @@ const ColumnMenuPopover = ({ editor }: { editor: Editor }) => {
             Add column after
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <TableColorSubmenu editor={editor} />
+          <ColorPickerSubmenu editor={editor} />
+          <AlignSubmenu editor={editor} />
           <DropdownMenuSeparator />
           <StyledDestructiveMenuItem
             onClick={() => {
@@ -180,7 +181,8 @@ const RowMenuPopover = ({ editor }: { editor: Editor }) => {
             Add row after
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <TableColorSubmenu editor={editor} />
+          <ColorPickerSubmenu editor={editor} />
+          <AlignSubmenu editor={editor} />
           <DropdownMenuSeparator />
           <StyledDestructiveMenuItem
             onClick={() => {
@@ -297,35 +299,8 @@ const CellMenuPopover = ({ editor }: { editor: Editor }) => {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>Alignment</DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                <DropdownMenuItem
-                  onClick={() => {
-                    editor.chain().focus().setCellAttribute('verticalAlign', 'top').run()
-                  }}
-                >
-                  Align top
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    editor.chain().focus().setCellAttribute('verticalAlign', 'middle').run()
-                  }}
-                >
-                  Align middle
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    editor.chain().focus().setCellAttribute('verticalAlign', 'bottom').run()
-                  }}
-                >
-                  Align bottom
-                </DropdownMenuItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
-          </DropdownMenuSub>
-          <TableColorSubmenu editor={editor} />
+          <ColorPickerSubmenu editor={editor} />
+          <AlignSubmenu editor={editor} />
           <DropdownMenuItem
             hidden={!canClearContents}
             onClick={() => {

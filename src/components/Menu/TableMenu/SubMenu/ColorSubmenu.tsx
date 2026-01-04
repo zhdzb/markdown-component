@@ -9,15 +9,11 @@ import {
   DropdownMenuPortal,
   DropdownMenuLabel,
 } from '@/ui/DropdownMenu'
-import { TEXT_COLORS, HIGHLIGHT_COLORS } from '../BubbleMenu/Selectors/ColorPicker/constants'
+import { TEXT_COLORS, HIGHLIGHT_COLORS } from '../../BubbleMenu/Selectors/ColorPicker/constants'
 import { useRecentColors } from '@/hooks/useRecentColors'
-import { TextColorPreview, HighlightColorPreview } from '../../ColorItem'
+import { TextColorPreview, HighlightColorPreview } from '../../../ColorItem'
 
-interface TableColorSubmenuProps {
-  editor: Editor
-}
-
-export const TableColorSubmenu = ({ editor }: TableColorSubmenuProps) => {
+export const ColorPickerSubmenu = ({ editor }: { editor: Editor }) => {
   const { recentColors, addRecentColor } = useRecentColors()
 
   const setTextColor = (color: string) => {

@@ -104,7 +104,29 @@ export const CustomTable = Table.extend({
   },
 })
 
-export const CustomTableHeader = TableHeader.configure({
+export const CustomTableHeader = TableHeader.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      verticalAlign: {
+        default: null,
+        parseHTML: element => element.style.verticalAlign,
+        renderHTML: attributes => {
+          if (!attributes.verticalAlign) return {}
+          return { style: `vertical-align: ${attributes.verticalAlign}` }
+        },
+      },
+      horizontalAlign: {
+        default: null,
+        parseHTML: element => element.style.textAlign,
+        renderHTML: attributes => {
+          if (!attributes.horizontalAlign) return {}
+          return { style: `text-align: ${attributes.horizontalAlign}` }
+        },
+      },
+    }
+  },
+}).configure({
   HTMLAttributes: {},
 })
 
@@ -113,12 +135,19 @@ export const CustomTableCell = TableCell.extend({
     return {
       ...this.parent?.(),
       verticalAlign: {
-        default: 'top',
-        parseHTML: element => {
-          return element.style.verticalAlign || 'top'
-        },
+        default: null,
+        parseHTML: element => element.style.verticalAlign,
         renderHTML: attributes => {
+          if (!attributes.verticalAlign) return {}
           return { style: `vertical-align: ${attributes.verticalAlign}` }
+        },
+      },
+      horizontalAlign: {
+        default: null,
+        parseHTML: element => element.style.textAlign,
+        renderHTML: attributes => {
+          if (!attributes.horizontalAlign) return {}
+          return { style: `text-align: ${attributes.horizontalAlign}` }
         },
       },
     }
