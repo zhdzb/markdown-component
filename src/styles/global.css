@@ -10,6 +10,8 @@
   --primary-foreground: oklch(0.97 0.014 254.604);
   --secondary: oklch(0.92 0 286);
   --secondary-foreground: oklch(0.21 0.006 285.885);
+  --placeholder: rgba(40, 44, 51, 0.42);
+  --tt-slash-decoration-bg-color: rgba(15, 22, 36, 0.05);
   --muted: oklch(0.967 0.001 286.375);
   --muted-foreground: oklch(0.552 0.016 285.938);
   --accent: oklch(0.967 0.001 286.375);

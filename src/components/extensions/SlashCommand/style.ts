@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 export const StyledSlashCommand = styled.div`
   background-color: var(--popover);
@@ -75,5 +75,42 @@ export const StyledSlashCommand = styled.div`
     padding: 0.5rem 0.75rem;
     font-size: 0.875rem;
     color: var(--muted-foreground);
+  }
+`
+
+export const SlashCommandDecorationStyle = css`
+  .tiptap-slash-decoration {
+    background: var(--tt-slash-decoration-bg-color);
+    border-radius: 0.25rem; /* var(--tt-radius-xs) equivalent */
+    outline: 2px solid var(--tt-slash-decoration-bg-color);
+    position: relative;
+    display: inline-block;
+
+    &::after {
+      content: 'Filter...';
+      box-sizing: border-box;
+      margin-left: 0.2rem;
+      color: var(--muted-foreground);
+      pointer-events: none;
+      white-space: nowrap;
+      opacity: 0.6;
+    }
+  }
+
+  .tiptap {
+    .is-editor-empty:where(p, h1, h2, h3):first-child::before {
+      content: attr(data-placeholder);
+      float: left;
+      height: 0;
+      pointer-events: none;
+      color: var(--placeholder);
+    }
+    .is-empty:where(p, h1, h2, h3)::before {
+      content: attr(data-placeholder);
+      float: left;
+      height: 0;
+      pointer-events: none;
+      color: var(--placeholder);
+    }
   }
 `
