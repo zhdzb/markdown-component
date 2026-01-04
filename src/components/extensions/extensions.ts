@@ -8,6 +8,7 @@ import { CustomCodeBlock } from './CodeBlock'
 import { Color } from '@tiptap/extension-color'
 import { TextStyle } from '@tiptap/extension-text-style'
 import Highlight from '@tiptap/extension-highlight'
+import TextAlign from '@tiptap/extension-text-align'
 import { Mermaid } from './mermaid'
 import { CustomTaskItem, CustomTaskList } from './TaskList'
 
@@ -15,6 +16,9 @@ export const CustomExtensions = [
   CustomStarterKit,
   CustomHeading,
   TextStyle,
+  TextAlign.configure({
+    types: ['heading', 'paragraph', 'math'],
+  }),
   Color,
   Highlight.configure({
     multicolor: true,
