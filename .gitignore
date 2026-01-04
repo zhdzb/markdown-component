@@ -5,4 +5,12 @@ playground-dist/
 npm-debug.log*
 yarn.lock
 .DS_Store
-
+.prettierrc
+.prettierignore
+.eslintrc.js
+.eslintignore
+.vscode/
+.idea/
+.history/
+.gitignore
+.gitignore
