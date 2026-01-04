@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Editor } from '@tiptap/core'
 import { useEditorState } from '@tiptap/react'
 import { Baseline, ChevronDownIcon } from 'lucide-react'
@@ -6,7 +6,8 @@ import { Button } from '@/ui/Button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/Popover'
 import { TEXT_COLORS, HIGHLIGHT_COLORS } from './constants'
 import { StyledColorContainer } from './style'
-import { setLocalStorage, getLocalStorage } from '@/utils/localstorage'
+import { useRecentColors } from '@/hooks/useRecentColors'
+import { TextColorPreview, HighlightColorPreview } from '@/components/ColorItem'
 
 interface ColorSelectorProps {
   editor: Editor
@@ -15,11 +16,6 @@ interface ColorSelectorProps {
 interface ColorState {
   textColor: string | undefined
   highlightColor: string | undefined
-}
-
-interface RecentColor {
-  type: 'text' | 'highlight'
-  value: string
 }
 
 export const ColorSelector = ({ editor }: ColorSelectorProps) => {
@@ -33,32 +29,7 @@ export const ColorSelector = ({ editor }: ColorSelectorProps) => {
     },
   })
 
-  const [recentColors, setRecentColors] = useState<RecentColor[]>([])
-
-  useEffect(() => {
-    const stored = getLocalStorage('recentColors')
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored)
-        if (Array.isArray(parsed)) {
-          setRecentColors(parsed)
-        }
-      } catch (e) {
-        console.error('Failed to parse recent colors', e)
-      }
-    }
-  }, [])
-
-  const addRecentColor = (value: string, type: 'text' | 'highlight') => {
-    if (!value) return
-
-    setRecentColors(prev => {
-      const filtered = prev.filter(c => !(c.type === type && c.value === value))
-      const newColors = [{ type, value }, ...filtered].slice(0, 4)
-      setLocalStorage('recentColors', JSON.stringify(newColors))
-      return newColors
-    })
-  }
+  const { recentColors, addRecentColor } = useRecentColors()
 
   const setTextColor = (color: string) => {
     if (color) {
@@ -88,6 +59,7 @@ export const ColorSelector = ({ editor }: ColorSelectorProps) => {
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start" noPortal>
         <StyledColorContainer>
+          {/* recent color */}
           {recentColors.length > 0 && (
             <div className="section">
               <span className="section-title">Recent Colors</span>
@@ -95,7 +67,12 @@ export const ColorSelector = ({ editor }: ColorSelectorProps) => {
                 {recentColors.map((item, index) => (
                   <button
                     key={`${item.type}-${item.value}-${index}`}
-                    className="color-btn"
+                    className={`color-btn ${
+                      (item.type === 'text' && textColor === item.value) ||
+                      (item.type === 'highlight' && highlightColor === item.value)
+                        ? 'is-active'
+                        : ''
+                    }`}
                     onClick={() =>
                       item.type === 'text'
                         ? setTextColor(item.value)
@@ -104,11 +81,9 @@ export const ColorSelector = ({ editor }: ColorSelectorProps) => {
                     title={item.value}
                   >
                     {item.type === 'text' ? (
-                      <span className="text-preview" style={{ color: item.value }}>
-                        A
-                      </span>
+                      <TextColorPreview color={item.value} />
                     ) : (
-                      <div className="highlight-preview" style={{ backgroundColor: item.value }} />
+                      <HighlightColorPreview color={item.value} />
                     )}
                   </button>
                 ))}
@@ -126,14 +101,7 @@ export const ColorSelector = ({ editor }: ColorSelectorProps) => {
                   className={`color-btn ${textColor === item.value ? 'is-active' : ''}`}
                   title={item.name}
                 >
-                  <span
-                    className="text-preview"
-                    style={{
-                      color: item.value || '#000',
-                    }}
-                  >
-                    A
-                  </span>
+                  <TextColorPreview color={item.value} />
                 </button>
               ))}
             </div>
@@ -149,14 +117,7 @@ export const ColorSelector = ({ editor }: ColorSelectorProps) => {
                   className={`color-btn ${highlightColor === item.value ? 'is-active' : ''}`}
                   title={item.name}
                 >
-                  <div
-                    className={`highlight-preview ${!item.value ? 'has-border' : ''}`}
-                    style={{
-                      backgroundColor: item.value || 'transparent',
-                    }}
-                  >
-                    {!item.value && <div className="no-color-line" />}
-                  </div>
+                  <HighlightColorPreview color={item.value} />
                 </button>
               ))}
             </div>

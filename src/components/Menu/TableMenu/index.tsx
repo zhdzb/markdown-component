@@ -37,6 +37,7 @@ import {
   columnAddPluginKey,
   tableSelectionOverlayPluginKey,
 } from '@/components/extensions/table'
+import { TableColorSubmenu } from './ColorSubmenu'
 import { StyledTableAddHandle } from './style'
 
 interface CellMenusState {
@@ -107,6 +108,8 @@ const ColumnMenuPopover = ({ editor }: { editor: Editor }) => {
             Add column after
           </DropdownMenuItem>
           <DropdownMenuSeparator />
+          <TableColorSubmenu editor={editor} />
+          <DropdownMenuSeparator />
           <StyledDestructiveMenuItem
             onClick={() => {
               editor.chain().focus().deleteColumn().run()
@@ -176,6 +179,8 @@ const RowMenuPopover = ({ editor }: { editor: Editor }) => {
           >
             Add row after
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <TableColorSubmenu editor={editor} />
           <DropdownMenuSeparator />
           <StyledDestructiveMenuItem
             onClick={() => {
@@ -320,6 +325,7 @@ const CellMenuPopover = ({ editor }: { editor: Editor }) => {
               </DropdownMenuSubContent>
             </DropdownMenuPortal>
           </DropdownMenuSub>
+          <TableColorSubmenu editor={editor} />
           <DropdownMenuItem
             hidden={!canClearContents}
             onClick={() => {
