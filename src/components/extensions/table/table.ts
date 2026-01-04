@@ -1,8 +1,10 @@
 import { createColGroup, Table, TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
+import { CellSelection } from '@tiptap/pm/tables'
+import { TextSelection } from '@tiptap/pm/state'
 import { DOMOutputSpec, DOMSerializer } from '@tiptap/pm/model'
 import { mergeAttributes } from '@tiptap/react'
 import type { Command } from '@tiptap/core'
-import { moveColumn, moveRow } from './utils'
+import { clearCellContent, moveColumn, moveRow } from './utils'
 
 export const CustomTable = Table.extend({
   renderHTML({ node, HTMLAttributes }) {
@@ -100,6 +102,10 @@ export const CustomTable = Table.extend({
         (): Command =>
         ({ state, dispatch }) =>
           moveRow(state, dispatch, 'down'),
+      clearContents:
+        (): Command =>
+        ({ state, dispatch }) =>
+          clearCellContent(state, dispatch),
     }
   },
 })

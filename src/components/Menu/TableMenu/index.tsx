@@ -17,16 +17,13 @@ import {
   StyledTableMenuContent,
   StyledDestructiveMenuItem,
 } from './style'
-import { PluginKey, TextSelection } from '@tiptap/pm/state'
-import { CellSelection, deleteCellSelection } from '@tiptap/pm/tables'
-import { Editor, useEditorState } from '@tiptap/react'
+import { columnMenuPluginKey, rowMenuPluginKey } from '@/components/extensions/table'
+import { useTableSelectionState } from './hooks/useTableSelectionState'
+import { Editor } from '@tiptap/react'
+import { PluginKey } from '@tiptap/pm/state'
 // import { EllipsisIcon, EllipsisVerticalIcon, EqualIcon } from "lucide-react";
 import { useMemo, useState } from 'react'
 import {
-  columnMenuPluginKey,
-  rowMenuPluginKey,
-  TableMenuHandle,
-  TableMenuHandleProps,
   TableSelectionOverlay,
   TableSelectionOverlayProps,
   getIsFirstOrLastRow,
@@ -36,19 +33,17 @@ import {
   rowAddPluginKey,
   columnAddPluginKey,
   tableSelectionOverlayPluginKey,
+  TableMenuHandle,
+  TableMenuHandleProps,
 } from '@/components/extensions/table'
 import { ColorPickerSubmenu, AlignSubmenu } from './SubMenu'
 import { StyledTableAddHandle } from './style'
 
-interface CellMenusState {
-  canMergeCell: boolean
-  canSplitCell: boolean
-  canClearContents: boolean
-}
-
 const ColumnMenuPopover = ({ editor }: { editor: Editor }) => {
   const [opened, setOpened] = useState(false)
-  const { isFirstColumn = false, isLastColumn = false } = getIsFirstOrLastColumn(editor as Editor)
+  const { isFirstColumn = false, isLastColumn = false } = getIsFirstOrLastColumn(editor)
+  const { canClearContents } = useTableSelectionState(editor)
+
   return (
     <DropdownMenu
       modal
@@ -110,6 +105,14 @@ const ColumnMenuPopover = ({ editor }: { editor: Editor }) => {
           <DropdownMenuSeparator />
           <ColorPickerSubmenu editor={editor} />
           <AlignSubmenu editor={editor} />
+          <DropdownMenuItem
+            hidden={!canClearContents}
+            onClick={() => {
+              ;(editor.chain().focus() as any).clearContents().run()
+            }}
+          >
+            Clear contents
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <StyledDestructiveMenuItem
             onClick={() => {
@@ -126,7 +129,9 @@ const ColumnMenuPopover = ({ editor }: { editor: Editor }) => {
 
 const RowMenuPopover = ({ editor }: { editor: Editor }) => {
   const [opened, setOpened] = useState(false)
-  const { isFirstRow = false, isLastRow = false } = getIsFirstOrLastRow(editor as Editor)
+  const { isFirstRow = false, isLastRow = false } = getIsFirstOrLastRow(editor)
+  const { canClearContents } = useTableSelectionState(editor)
+
   return (
     <DropdownMenu
       modal
@@ -183,6 +188,14 @@ const RowMenuPopover = ({ editor }: { editor: Editor }) => {
           <DropdownMenuSeparator />
           <ColorPickerSubmenu editor={editor} />
           <AlignSubmenu editor={editor} />
+          <DropdownMenuItem
+            hidden={!canClearContents}
+            onClick={() => {
+              ;(editor.chain().focus() as any).clearContents().run()
+            }}
+          >
+            Clear contents
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <StyledDestructiveMenuItem
             onClick={() => {
@@ -199,63 +212,7 @@ const RowMenuPopover = ({ editor }: { editor: Editor }) => {
 
 const CellMenuPopover = ({ editor }: { editor: Editor }) => {
   const [opened, setOpened] = useState(false)
-  const { canMergeCell, canSplitCell, canClearContents } = useEditorState<CellMenusState>({
-    editor: editor,
-    equalityFn: (a, b) => {
-      return (
-        a.canMergeCell === b?.canMergeCell &&
-        a.canSplitCell === b.canSplitCell &&
-        a.canClearContents === b.canClearContents
-      )
-    },
-    selector: instance => {
-      const editor = instance.editor
-      const { selection } = editor.state
-      const { from, to, ranges } = selection
-      if (!instance.editor.isActive('table')) {
-        return {
-          canMergeCell: false,
-          canSplitCell: false,
-          canClearContents: false,
-        }
-      }
-
-      let hasSpannedCell = false
-      let cellSelectionCount = 0
-      let selectionContentSize = 0
-
-      if (selection instanceof TextSelection) {
-        editor.state.doc.nodesBetween(from, to, (node, pos) => {
-          const nodeName = node.type.name
-          if (nodeName === 'tableHeader' || nodeName === 'tableCell') {
-            const cell = editor.view.nodeDOM(pos) as HTMLTableCellElement
-            hasSpannedCell = cell.colSpan > 1 || cell.rowSpan > 1
-            return false
-          }
-          return true
-        })
-      }
-
-      if (selection instanceof CellSelection) {
-        cellSelectionCount = selection.ranges.length
-        for (const range of ranges) {
-          const { $from, $to } = range
-          editor.state.doc.nodesBetween($from.pos, $to.pos, node => {
-            if (node.isTextblock) {
-              selectionContentSize += node.content.size
-            }
-            return true
-          })
-        }
-      }
-
-      return {
-        canMergeCell: cellSelectionCount > 1,
-        canSplitCell: hasSpannedCell,
-        canClearContents: selectionContentSize > 0,
-      }
-    },
-  })
+  const { canMergeCell, canSplitCell, canClearContents } = useTableSelectionState(editor)
 
   return (
     <DropdownMenu
@@ -304,13 +261,7 @@ const CellMenuPopover = ({ editor }: { editor: Editor }) => {
           <DropdownMenuItem
             hidden={!canClearContents}
             onClick={() => {
-              editor
-                .chain()
-                .focus()
-                .command(({ state, dispatch }) => {
-                  return deleteCellSelection(state, dispatch)
-                })
-                .run()
+              ;(editor.chain().focus() as any).clearContents().run()
             }}
           >
             Clear contents

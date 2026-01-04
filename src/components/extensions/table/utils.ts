@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/react'
 import { TableMap, CellSelection } from '@tiptap/pm/tables'
 import { findParentNode } from '@tiptap/core'
-import type { EditorState, Transaction } from '@tiptap/pm/state'
+import { TextSelection, type EditorState, type Transaction } from '@tiptap/pm/state'
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model'
 
 /**
@@ -326,4 +326,53 @@ export function getIsFirstOrLastRow(editor: Editor) {
   const rowIndex = getRowIndex(cell, table)
   const tableMap = TableMap.get(table.node)
   return { isFirstRow: rowIndex === 0, isLastRow: rowIndex === tableMap.height - 1 }
+}
+
+/**
+ * 清除选中的单元格的内容
+ */
+export function clearCellContent(
+  state: EditorState,
+  dispatch: ((tr: Transaction) => void) | undefined
+) {
+  const { selection } = state
+  if (selection instanceof CellSelection) {
+    if (dispatch) {
+      const tr = state.tr
+      const cells: { pos: number; size: number }[] = []
+      selection.forEachCell((node, pos) => {
+        cells.push({ pos, size: node.nodeSize })
+      })
+
+      cells.reverse().forEach(({ pos, size }) => {
+        const empty = state.schema.nodes.paragraph.create()
+        tr.replaceWith(pos + 1, pos + size - 1, empty)
+      })
+      dispatch(tr)
+    }
+    return true
+  } else {
+    // Handle single cell selection (TextSelection or NodeSelection inside a cell)
+    const $from = selection.$from
+    for (let d = $from.depth; d > 0; d--) {
+      const node = $from.node(d)
+      if (node.type.name === 'tableCell' || node.type.name === 'tableHeader') {
+        if (dispatch) {
+          const pos = $from.before(d)
+          const size = node.nodeSize
+          const empty = state.schema.nodes.paragraph.create()
+          const tr = state.tr
+          tr.replaceWith(pos + 1, pos + size - 1, empty)
+
+          // Restore selection to the cleared cell
+          const resolvedPos = tr.doc.resolve(pos + 2) // +1 for cell start, +1 for inside paragraph
+          tr.setSelection(TextSelection.near(resolvedPos))
+
+          dispatch(tr)
+        }
+        return true
+      }
+    }
+  }
+  return false
 }
