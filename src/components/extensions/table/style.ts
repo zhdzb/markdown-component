@@ -43,4 +43,22 @@ export const StyledTable = css`
     margin-left: -1rem;
     position: relative;
   }
+
+  .tiptap.ProseMirror th,
+  .tiptap td {
+    position: relative;
+  }
+  .tiptap.ProseMirror .column-resize-handle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: calc(100% + 2px);
+    width: 3px;
+    margin-inline-start: -1px;
+    margin-top: -1px;
+    background-color: var(--primary);
+    cursor: col-resize;
+    z-index: 1;
+    pointer-events: auto;
+  }
 `
