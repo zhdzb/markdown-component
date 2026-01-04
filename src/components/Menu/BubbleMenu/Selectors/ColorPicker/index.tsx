@@ -1,17 +1,12 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Editor } from '@tiptap/core'
 import { useEditorState } from '@tiptap/react'
 import { Baseline, ChevronDownIcon } from 'lucide-react'
 import { Button } from '@/ui/Button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/ui/Popover'
 import { TEXT_COLORS, HIGHLIGHT_COLORS } from './constants'
-import {
-  StyledColorContainer,
-  StyledSection,
-  StyledSectionTitle,
-  StyledGrid,
-  StyledColorButton,
-} from './style'
+import { StyledColorContainer } from './style'
+import { setLocalStorage, getLocalStorage } from '@/utils/localstorage'
 
 interface ColorSelectorProps {
   editor: Editor
@@ -20,6 +15,11 @@ interface ColorSelectorProps {
 interface ColorState {
   textColor: string | undefined
   highlightColor: string | undefined
+}
+
+interface RecentColor {
+  type: 'text' | 'highlight'
+  value: string
 }
 
 export const ColorSelector = ({ editor }: ColorSelectorProps) => {
@@ -33,9 +33,37 @@ export const ColorSelector = ({ editor }: ColorSelectorProps) => {
     },
   })
 
+  const [recentColors, setRecentColors] = useState<RecentColor[]>([])
+
+  useEffect(() => {
+    const stored = getLocalStorage('recentColors')
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored)
+        if (Array.isArray(parsed)) {
+          setRecentColors(parsed)
+        }
+      } catch (e) {
+        console.error('Failed to parse recent colors', e)
+      }
+    }
+  }, [])
+
+  const addRecentColor = (value: string, type: 'text' | 'highlight') => {
+    if (!value) return
+
+    setRecentColors(prev => {
+      const filtered = prev.filter(c => !(c.type === type && c.value === value))
+      const newColors = [{ type, value }, ...filtered].slice(0, 4)
+      setLocalStorage('recentColors', JSON.stringify(newColors))
+      return newColors
+    })
+  }
+
   const setTextColor = (color: string) => {
     if (color) {
       editor.chain().focus().setColor(color).run()
+      addRecentColor(color, 'text')
     } else {
       editor.chain().focus().unsetColor().run()
     }
@@ -44,6 +72,7 @@ export const ColorSelector = ({ editor }: ColorSelectorProps) => {
   const setHighlightColor = (color: string) => {
     if (color) {
       editor.chain().focus().setHighlight({ color }).run()
+      addRecentColor(color, 'highlight')
     } else {
       editor.chain().focus().unsetHighlight().run()
     }
@@ -59,68 +88,79 @@ export const ColorSelector = ({ editor }: ColorSelectorProps) => {
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start" noPortal>
         <StyledColorContainer>
-          <StyledSection>
-            <StyledSectionTitle>Text Color</StyledSectionTitle>
-            <StyledGrid>
+          {recentColors.length > 0 && (
+            <div className="section">
+              <span className="section-title">Recent Colors</span>
+              <div className="color-grid">
+                {recentColors.map((item, index) => (
+                  <button
+                    key={`${item.type}-${item.value}-${index}`}
+                    className="color-btn"
+                    onClick={() =>
+                      item.type === 'text'
+                        ? setTextColor(item.value)
+                        : setHighlightColor(item.value)
+                    }
+                    title={item.value}
+                  >
+                    {item.type === 'text' ? (
+                      <span className="text-preview" style={{ color: item.value }}>
+                        A
+                      </span>
+                    ) : (
+                      <div className="highlight-preview" style={{ backgroundColor: item.value }} />
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="section">
+            <span className="section-title">Text Color</span>
+            <div className="color-grid">
               {TEXT_COLORS.map((item, index) => (
-                <StyledColorButton
+                <button
                   key={index}
                   onClick={() => setTextColor(item.value)}
-                  isActive={textColor === item.value}
+                  className={`color-btn ${textColor === item.value ? 'is-active' : ''}`}
                   title={item.name}
                 >
                   <span
+                    className="text-preview"
                     style={{
                       color: item.value || '#000',
-                      fontSize: '1rem',
-                      fontWeight: 500,
                     }}
                   >
                     A
                   </span>
-                </StyledColorButton>
+                </button>
               ))}
-            </StyledGrid>
-          </StyledSection>
+            </div>
+          </div>
 
-          <StyledSection>
-            <StyledSectionTitle>Highlight Color</StyledSectionTitle>
-            <StyledGrid>
+          <div className="section">
+            <span className="section-title">Highlight Color</span>
+            <div className="color-grid">
               {HIGHLIGHT_COLORS.map((item, index) => (
-                <StyledColorButton
+                <button
                   key={index}
                   onClick={() => setHighlightColor(item.value)}
-                  isActive={highlightColor === item.value}
+                  className={`color-btn ${highlightColor === item.value ? 'is-active' : ''}`}
                   title={item.name}
                 >
                   <div
+                    className={`highlight-preview ${!item.value ? 'has-border' : ''}`}
                     style={{
-                      width: '1.25rem',
-                      height: '1.25rem',
-                      borderRadius: '50%',
                       backgroundColor: item.value || 'transparent',
-                      border: item.value ? 'none' : '1px solid #e5e7eb',
-                      position: 'relative',
                     }}
                   >
-                    {!item.value && (
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: '50%',
-                          left: '50%',
-                          transform: 'translate(-50%, -50%) rotate(45deg)',
-                          width: '100%',
-                          height: '1px',
-                          backgroundColor: '#ef4444',
-                        }}
-                      />
-                    )}
+                    {!item.value && <div className="no-color-line" />}
                   </div>
-                </StyledColorButton>
+                </button>
               ))}
-            </StyledGrid>
-          </StyledSection>
+            </div>
+          </div>
         </StyledColorContainer>
       </PopoverContent>
     </Popover>
