@@ -3,12 +3,8 @@ import { EditIcon } from 'lucide-react'
 import mermaid from 'mermaid'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Button } from '@/ui/Button'
-import {
-  StyledMermaidWrapper,
-  StyledMermaidContainer,
-  StyledMermaidActions,
-  StyledMermaidEditor,
-} from './style'
+import { Textarea } from '@/ui/Textarea'
+import { StyledMermaidWrapper, StyledMermaidContainer, StyledMermaidActions } from './style'
 
 export function MermaidView({
   editor,
@@ -151,13 +147,14 @@ export function MermaidView({
   if (isEditing) {
     return (
       <StyledMermaidWrapper>
-        <StyledMermaidEditor
+        <Textarea
           ref={textareaRef}
           value={content}
           onChange={e => setContent(e.target.value)}
           onBlur={handleBlur}
           spellCheck={false}
           placeholder="Enter Mermaid code..."
+          autoResize
         />
       </StyledMermaidWrapper>
     )
