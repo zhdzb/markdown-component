@@ -9,6 +9,7 @@ import { Color } from '@tiptap/extension-color'
 import { TextStyle } from '@tiptap/extension-text-style'
 import Highlight from '@tiptap/extension-highlight'
 import { Mermaid } from './mermaid'
+import { CustomTaskItem, CustomTaskList } from './TaskList'
 
 export const CustomExtensions = [
   CustomStarterKit,
@@ -32,4 +33,6 @@ export const CustomExtensions = [
   CustomTableRow,
   CustomCodeBlock,
   Mermaid,
+  CustomTaskList,
+  CustomTaskItem,
 ]

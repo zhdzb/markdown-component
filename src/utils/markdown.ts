@@ -17,6 +17,38 @@ turndown.addRule('mermaid', {
   },
 })
 
+// 添加 TaskList 扩展
+marked.use({
+  extensions: [
+    {
+      name: 'taskList',
+      level: 'block',
+      start(src) {
+        return src.match(/^(\s*)([-+*])\s+\[([ xX])\]/)?.index
+      },
+      tokenizer(src, tokens) {
+        const rule = /^(\s*)([-+*])\s+\[([ xX])\]\s+(.*)(?:\n|$)/
+        const match = rule.exec(src)
+        if (match) {
+          const token = {
+            type: 'taskList',
+            raw: match[0],
+            text: match[4].trim(),
+            checked: match[3].toLowerCase() === 'x',
+            tokens: [],
+          }
+          this.lexer.inline(token.text, token.tokens)
+          return token
+        }
+      },
+      renderer(token) {
+        const checkbox = `<input type="checkbox" ${token.checked ? 'checked' : ''} disabled> `
+        return `<ul data-type="taskList"><li data-type="taskItem" data-checked="${token.checked}"><label>${checkbox}</label><div>${this.parser.parseInline(token.tokens)}</div></li></ul>`
+      },
+    },
+  ],
+})
+
 export function markdownToHtml(md: string | undefined) {
   if (!md) return '<p></p>'
 
@@ -53,8 +85,16 @@ export function markdownToHtml(md: string | undefined) {
 
   return DOMPurify.sanitize(processedHtml, {
     USE_PROFILES: { html: true },
-    ADD_TAGS: ['div'], // 确保 div 标签不被过滤
-    ADD_ATTR: ['class', 'data-content-type'],
+    ADD_TAGS: ['div', 'ul', 'li', 'input', 'label'], // 确保 div 标签不被过滤
+    ADD_ATTR: [
+      'class',
+      'data-content-type',
+      'data-type',
+      'data-checked',
+      'type',
+      'checked',
+      'disabled',
+    ],
   })
 }
 

@@ -75,6 +75,16 @@ const list: CommandSuggestionItem[] = [
       editor.chain().focus().deleteRange(range).toggleOrderedList().run()
     },
   },
+    {
+    id: 'checkedList',
+    title: 'CheckedList',
+    description: 'Create a to-do list.',
+    keywords: ['todo', 'list'],
+    icon: menuSvg.CheckedList,
+    command: ({ editor, range }) => {
+      editor.chain().focus().deleteRange(range).toggleTaskList().run()
+    },
+  },
   {
     id: 'blockquote',
     title: 'Quote',

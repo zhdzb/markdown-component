@@ -11,6 +11,7 @@ import {
   LetterTextIcon,
   List,
   ListOrdered,
+  CheckSquare,
   LucideIcon,
   QuoteIcon,
 } from 'lucide-react'
@@ -24,6 +25,7 @@ interface SelectorResult {
   isBulletList: boolean
   isOrderedList: boolean
   isBlockquote: boolean
+  isTaskList: boolean
 }
 
 interface MenuItem {
@@ -58,12 +60,12 @@ const items: MenuItem[] = [
     onClick: editor => editor.chain().focus().toggleHeading({ level: 3 }).run(),
     isActive: state => state.isHeading3,
   },
-  // {
-  //   name: "To-do List",
-  //   icon: CheckSquare,
-  //   onClick: (editor) => editor!.chain().focus().toggleTaskList().run(),
-  //   isActive: (editor) => editor!.isActive("taskItem"),
-  // },
+  {
+    name: 'To-do List',
+    icon: CheckSquare,
+    onClick: editor => editor!.chain().focus().toggleTaskList().run(),
+    isActive: state => state.isTaskList,
+  },
   {
     name: 'Bullet List',
     icon: List,
@@ -102,12 +104,13 @@ export const NodeSelector = ({ editor }: { editor: Editor }) => {
       isBulletList: instance.editor.isActive('bulletList'),
       isOrderedList: instance.editor.isActive('orderedList'),
       isBlockquote: instance.editor.isActive('blockquote'),
+      isTaskList: instance.editor.isActive('taskList'),
     }),
   })
 
   const activeItems = items.filter(item => item.isActive(editorState))
 
-  const name = activeItems.length > 1 ? 'Multiple' : (activeItems.pop()?.name ?? 'Text')
+  const name = activeItems.length > 1 ? activeItems[1].name : (activeItems[0]?.name ?? 'Text')
 
   return (
     <Popover>

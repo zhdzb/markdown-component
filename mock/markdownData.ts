@@ -11,6 +11,11 @@ export const data = `
 <p style="color: white; opacity: 0.9; font-size: 1.2em;">基于行业深度分析的差异化付费功能与商业化策略</p>
 </div>
 
+- [ ] Task 1
+  - [x] Subtask 1.1
+  - [ ] Subtask 1.2
+- [x] Task 2
+
 
 | 文档版本 | 编写日期       |
 | -------- | -------------- |

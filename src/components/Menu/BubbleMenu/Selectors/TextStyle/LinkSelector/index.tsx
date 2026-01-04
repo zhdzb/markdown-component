@@ -4,10 +4,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/ui/Popover'
 import { Editor } from '@tiptap/core'
 import { useEditorState } from '@tiptap/react'
 import { CheckIcon, LinkIcon, Trash2Icon } from 'lucide-react'
-import { useRef } from 'react'
+import { forwardRef, useRef } from 'react'
 import { StyledForm } from './style'
 
-export const LinkSelector = ({ editor }: { editor: Editor }) => {
+export const LinkSelector = forwardRef<HTMLButtonElement, { editor: Editor }>(({ editor }, ref) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const editorState = useEditorState({
     editor,
@@ -22,6 +22,7 @@ export const LinkSelector = ({ editor }: { editor: Editor }) => {
     <Popover>
       <PopoverTrigger asChild>
         <Button
+          ref={ref}
           variant="ghost"
           size="icon"
           className="rounded-none flex-shrink-0"
@@ -41,6 +42,7 @@ export const LinkSelector = ({ editor }: { editor: Editor }) => {
           onSubmit={evt => {
             evt.preventDefault()
             const url = inputRef.current?.value
+            console.log('url', url)
             if (!url) {
               return
             }
@@ -71,4 +73,7 @@ export const LinkSelector = ({ editor }: { editor: Editor }) => {
       </PopoverContent>
     </Popover>
   )
-}
+})
+
+LinkSelector.displayName = 'LinkSelector'
+

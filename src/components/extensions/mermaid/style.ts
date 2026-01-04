@@ -54,6 +54,7 @@ export const StyledMermaidEditor = styled.textarea`
   resize: vertical;
   outline: none;
   overflow: hidden;
+  resize: none;
 
   /* Match CodeBlock styles */
   background-color: rgb(247, 247, 247);
