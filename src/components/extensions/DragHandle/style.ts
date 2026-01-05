@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 export const HandleContainer = styled.div`
   display: flex;
@@ -58,5 +58,17 @@ export const DragIconWrapper = styled.div`
     &:hover {
       color: rgb(209 213 219);
     }
+  }
+`
+export const SelectedNodeStyle = css`
+  /* 选中节点高亮（拖拽句柄触发的 NodeSelection） */
+  .tiptap.ProseMirror .ProseMirror-selectednode:not(img):not(pre):not(.react-renderer) {
+    background-color: var(--selected-node-bg-color);
+  }
+
+  .tiptap.ProseMirror .ProseMirror-selectednode .tiptap-image .tiptap-image-container {
+    outline: 0.125rem solid rgba(0, 0, 0, 0);
+    outline-color: var(--selected-node-bd-color);
+    border-radius: 0.25rem;
   }
 `

@@ -35,6 +35,9 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.623 0.214 259.815);
+
+  --selected-node-bg-color: rgba(157, 138, 255, 0.2);
+  --selected-node-bd-color: rgba(84, 0, 229, 1);
 }
 
 .dark {

@@ -1,7 +1,8 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useRef, useEffect } from 'react'
 import { DragHandle } from '@tiptap/extension-drag-handle-react'
 import { Editor } from '@tiptap/react'
 import { Plus, GripVertical } from 'lucide-react'
+import { NodeSelection, TextSelection } from '@tiptap/pm/state'
 import { HandleContainer, ActionButton, DragIconWrapper } from './style'
 
 interface GlobalDragHandleProps {
@@ -10,6 +11,7 @@ interface GlobalDragHandleProps {
 
 export const GlobalDragHandle = ({ editor }: GlobalDragHandleProps) => {
   const [currentNode, setCurrentNode] = useState<{ node: any; pos: number } | null>(null)
+  const handleContainerRef = useRef<HTMLDivElement>(null)
 
   const handleNodeChange = useCallback((data: { node: any; pos: number; editor: Editor }) => {
     if (data.node) {
@@ -18,6 +20,13 @@ export const GlobalDragHandle = ({ editor }: GlobalDragHandleProps) => {
       setCurrentNode(null)
     }
   }, [])
+
+  const selectCurrentNode = useCallback(() => {
+    if (!currentNode) return
+    const { state, dispatch } = editor.view
+    const selection = NodeSelection.create(state.doc, currentNode.pos)
+    dispatch(state.tr.setSelection(selection))
+  }, [currentNode, editor.view])
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -46,20 +55,40 @@ export const GlobalDragHandle = ({ editor }: GlobalDragHandleProps) => {
       .run()
   }
 
+  const handleDragIconMouseDown = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    selectCurrentNode()
+  }
+
+  useEffect(() => {
+    const handleDocumentMouseDown = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null
+      const withinHandle = handleContainerRef.current?.contains(target ?? null)
+      const withinEditor = editor.view.dom.contains(target)
+
+      // 点击编辑器外或其他区域时，如果当前为 NodeSelection 则转换为文本选区以去除选中态
+      if (!withinHandle && !withinEditor) {
+        const { state, dispatch } = editor.view
+        if (state.selection instanceof NodeSelection) {
+          const pos = state.selection.from
+          dispatch(state.tr.setSelection(TextSelection.create(state.doc, pos)))
+        }
+      }
+    }
+
+    document.addEventListener('mousedown', handleDocumentMouseDown)
+    return () => {
+      document.removeEventListener('mousedown', handleDocumentMouseDown)
+    }
+  }, [editor.view])
+
   return (
-    <DragHandle
-      editor={editor}
-      onNodeChange={handleNodeChange}
-      tippyOptions={{
-        offset: [-2, 16],
-        zIndex: 10,
-      }}
-    >
-      <HandleContainer>
+    <DragHandle editor={editor} onNodeChange={handleNodeChange}>
+      <HandleContainer ref={handleContainerRef}>
         <ActionButton onClick={handleAdd} title="Add new block">
           <Plus size={16} />
         </ActionButton>
-        <DragIconWrapper>
+        <DragIconWrapper onMouseDown={handleDragIconMouseDown}>
           <GripVertical size={16} />
         </DragIconWrapper>
       </HandleContainer>

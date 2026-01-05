@@ -92,13 +92,13 @@ export function MermaidView({
     const code = getNodeCode()
 
     // Debug logging
-    console.log('Mermaid render - node:', {
-      hasContent: !!node.content,
-      contentSize: node.content?.size || 0,
-      textContent: node.textContent,
-      extractedCode: code,
-      nodeType: node.type.name,
-    })
+    // console.log('Mermaid render - node:', {
+    //   hasContent: !!node.content,
+    //   contentSize: node.content?.size || 0,
+    //   textContent: node.textContent,
+    //   extractedCode: code,
+    //   nodeType: node.type.name,
+    // })
 
     if (!code) {
       if (containerRef.current) {
