@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { MarkdownEditor } from '../core/MrakdownEditor'
+import { MarkdownEditor } from '../core/MarkdownEditor'
 
 interface MarkdownDisplayProps {
   content: string

@@ -43,7 +43,7 @@ marked.use({
       },
       renderer(token) {
         const checkbox = `<input type="checkbox" ${token.checked ? 'checked' : ''} disabled> `
-        return `<ul data-type="taskList"><li data-type="taskItem" data-checked="${token.checked}"><label>${checkbox}</label><div>${this.parser.parseInline(token.tokens)}</div></li></ul>`
+        return `<ul data-type="taskList"><li data-type="taskItem" data-checked="${token.checked}"><label>${checkbox}</label><div>${this.parser.parseInline(token.tokens || [])}</div></li></ul>`
       },
     },
   ],

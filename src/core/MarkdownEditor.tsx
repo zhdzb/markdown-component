@@ -9,7 +9,7 @@ import { TableHandle } from '../components/Menu/TableMenu'
 import { DefaultBubbleMenu } from '@/components/Menu/BubbleMenu'
 import { GlobalDragHandle } from '../components/extensions/DragHandle'
 
-interface MarkdownEditorProps {
+export interface MarkdownEditorProps {
   content: string
   isFullScreen: boolean
   theme: 'light' | 'dark'

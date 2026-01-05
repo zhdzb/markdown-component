@@ -3,16 +3,22 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
-  "type": "module",
+  "module": "dist/index.js",
+  "types": "./dist/types/src/index.d.ts",
+  "style": "./dist/index.css",
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
-      "types": "./dist/types/index.d.ts",
+      "types": "./dist/types/src/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.js"
-    }
+    },
+    "./style.css": "./dist/index.css"
   },
   "scripts": {
-    "build": "rsbuild build --config rsbuild.component.config.ts",
+    "build": "rsbuild build --config rsbuild.component.config.ts && tsc --emitDeclarationOnly",
     "dev": "rsbuild dev --config rsbuild.playground.config.ts",
     "playground:build": "rsbuild build --config rsbuild.playground.config.ts",
     "typecheck": "tsc --noEmit",
