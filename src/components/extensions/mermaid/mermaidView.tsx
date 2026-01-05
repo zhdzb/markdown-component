@@ -82,7 +82,7 @@ export function MermaidView({
         }
       })
     }
-    console.log('getNodeCode', code, node.content)
+    // console.log('getNodeCode', code, node.content)
     return code.trim()
   }, [node])
 

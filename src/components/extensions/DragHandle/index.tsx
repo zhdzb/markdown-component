@@ -4,7 +4,9 @@ import { Editor } from '@tiptap/react'
 import { Plus, GripVertical } from 'lucide-react'
 import { NodeSelection, TextSelection } from '@tiptap/pm/state'
 import { CellSelection, TableMap } from '@tiptap/pm/tables'
+import { DropdownMenuTrigger } from '@/ui/DropdownMenu'
 import { HandleContainer, ActionButton, DragIconWrapper } from './style'
+import { DragBlockMenu } from '@/components/Menu/DragBlockMenu'
 
 interface GlobalDragHandleProps {
   editor: Editor
@@ -12,6 +14,7 @@ interface GlobalDragHandleProps {
 
 export const GlobalDragHandle = ({ editor }: GlobalDragHandleProps) => {
   const [currentNode, setCurrentNode] = useState<{ node: any; pos: number } | null>(null)
+  const [menuOpen, setMenuOpen] = useState(false)
   const handleContainerRef = useRef<HTMLDivElement>(null)
 
   const handleNodeChange = useCallback((data: { node: any; pos: number; editor: Editor }) => {
@@ -68,9 +71,11 @@ export const GlobalDragHandle = ({ editor }: GlobalDragHandleProps) => {
       .run()
   }
 
-  const handleDragIconMouseDown = (e: React.MouseEvent) => {
+  const handleDragIconClick = (e: React.MouseEvent) => {
     e.stopPropagation()
+    e.preventDefault()
     selectCurrentNode()
+    setMenuOpen(true)
   }
 
   useEffect(() => {
@@ -101,9 +106,19 @@ export const GlobalDragHandle = ({ editor }: GlobalDragHandleProps) => {
         <ActionButton onClick={handleAdd} title="Add new block">
           <Plus size={16} />
         </ActionButton>
-        <DragIconWrapper onMouseDown={handleDragIconMouseDown}>
-          <GripVertical size={16} />
-        </DragIconWrapper>
+        <DragBlockMenu
+          editor={editor}
+          currentNode={currentNode?.node ?? null}
+          currentNodePos={currentNode?.pos ?? -1}
+          open={menuOpen}
+          onOpenChange={setMenuOpen}
+        >
+          <DropdownMenuTrigger asChild>
+            <DragIconWrapper onClick={handleDragIconClick}>
+              <GripVertical size={16} />
+            </DragIconWrapper>
+          </DropdownMenuTrigger>
+        </DragBlockMenu>
       </HandleContainer>
     </DragHandle>
   )
