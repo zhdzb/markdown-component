@@ -1,9 +1,8 @@
-import React, { useMemo, useEffect } from 'react'
+import React, { useMemo } from 'react'
 import { Editor, useEditor } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
 
 import { StyledMarkdownEditor } from './StyledMarkdownEditor'
-import { CustomExtensions } from '../components/extensions/extensions'
+import { createExtensions, OnUploadImage } from '../components/extensions/extensions'
 import { markdownToHtml } from '../utils/markdown'
 import { isMarkdownString } from '../utils/isMarkdownString'
 import { TableHandle } from '../components/Menu/TableMenu'
@@ -17,6 +16,7 @@ interface MarkdownEditorProps {
   zoom: number
   onBlur: () => void
   onUpdate: (editor: Editor) => void
+  onUploadImage?: OnUploadImage
 }
 
 export const MarkdownEditor = ({
@@ -26,6 +26,7 @@ export const MarkdownEditor = ({
   zoom,
   onBlur,
   onUpdate,
+  onUploadImage,
 }: MarkdownEditorProps) => {
   // 检测 content 是否为 Markdown 格式，如果是则转换为 HTML
   const htmlContent = useMemo(() => {
@@ -41,8 +42,10 @@ export const MarkdownEditor = ({
     return content
   }, [content])
 
+  const extensions = useMemo(() => createExtensions({ onUploadImage }), [onUploadImage])
+
   const editor = useEditor({
-    extensions: [...CustomExtensions],
+    extensions,
     content: htmlContent,
     onUpdate: ({ editor }) => {
       onUpdate?.(editor)

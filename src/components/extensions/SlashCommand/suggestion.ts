@@ -1,20 +1,23 @@
 import { computePosition, flip, shift } from '@floating-ui/dom'
 import { Editor, posToDOMRect, ReactRenderer } from '@tiptap/react'
 import { SuggestionOptions } from '@tiptap/suggestion'
-import { menuSvg } from '../../../svg'
 import { SlashCommandNodeAttrs } from './slashCommand'
+import { menuSvg } from '@/svg'
 import SuggestionList, {
   CommandSuggestionItem,
   SuggestionListHandle,
   SuggestionListProps,
 } from './suggestionList'
+import { createImageItem, ImageCommandOptions } from './imageCommand'
 
 type SuggestionType = Omit<
   SuggestionOptions<CommandSuggestionItem, SlashCommandNodeAttrs>,
   'editor'
 >
 
-const list: CommandSuggestionItem[] = [
+interface SuggestionConfig extends ImageCommandOptions {}
+
+const baseCommands: CommandSuggestionItem[] = [
   {
     id: 'text',
     title: 'Text',
@@ -75,7 +78,7 @@ const list: CommandSuggestionItem[] = [
       editor.chain().focus().deleteRange(range).toggleOrderedList().run()
     },
   },
-    {
+  {
     id: 'checkedList',
     title: 'CheckedList',
     description: 'Create a to-do list.',
@@ -128,6 +131,12 @@ const list: CommandSuggestionItem[] = [
   },
 ]
 
+const buildCommands = (options: SuggestionConfig): CommandSuggestionItem[] => {
+  const commands = [...baseCommands]
+  commands.push(createImageItem(options))
+  return commands
+}
+
 const updatePosition = (editor: Editor, element: Element) => {
   if (!(element instanceof HTMLElement)) {
     return
@@ -151,7 +160,9 @@ const updatePosition = (editor: Editor, element: Element) => {
   })
 }
 
-const getSuggestion = (): SuggestionType => {
+const getSuggestion = (options: SuggestionConfig = {}): SuggestionType => {
+  const list = buildCommands(options)
+
   return {
     items: ({ query }) => {
       const filterFun = (item: CommandSuggestionItem) => {
