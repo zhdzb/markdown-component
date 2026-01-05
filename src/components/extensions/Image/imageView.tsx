@@ -2,11 +2,13 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { NodeViewProps } from '@tiptap/core'
 import { NodeViewWrapper } from '@tiptap/react'
 import { StyledImageWrapper } from './style'
+import { useImageMenu } from './useImageMenu'
+import { ImageMenu } from './imageMenu'
 
 const MIN_WIDTH = 80
 const FALLBACK_MAX_WIDTH = 600
 
-const ImageView = ({ node, updateAttributes }: NodeViewProps) => {
+const ImageView = ({ node, updateAttributes, editor, selected }: NodeViewProps) => {
   const { src, alt, title, width, align = 'center' } = node.attrs
   const wrapperRef = useRef<HTMLDivElement>(null)
   const imageRef = useRef<HTMLImageElement>(null)
@@ -15,6 +17,18 @@ const ImageView = ({ node, updateAttributes }: NodeViewProps) => {
   const initializedRef = useRef(false)
   const [currentWidth, setCurrentWidth] = useState<number | null>(width ?? null)
 
+  const { menuPosition, handleAlignChange, handleDownload, handleDelete } = useImageMenu({
+    wrapperRef,
+    selected,
+    align,
+    currentWidth,
+    editor,
+    src,
+    alt,
+    title,
+    updateAttributes,
+  })
+
   useEffect(() => {
     setCurrentWidth(width ?? null)
   }, [width])
@@ -22,7 +36,6 @@ const ImageView = ({ node, updateAttributes }: NodeViewProps) => {
   const clampWidth = useCallback((rawWidth: number | null) => {
     if (!rawWidth) return null
     const availableWidth = wrapperRef.current?.getBoundingClientRect().width ?? maxWidthRef.current
-    console.log('availableWidth', availableWidth)
     const maxAllowed = Math.min(maxWidthRef.current, availableWidth)
     return Math.max(MIN_WIDTH, Math.min(maxAllowed, Math.round(rawWidth)))
   }, [])
@@ -105,6 +118,14 @@ const ImageView = ({ node, updateAttributes }: NodeViewProps) => {
       data-width={currentWidth || ''}
       style={{ whiteSpace: 'normal' }}
     >
+      <ImageMenu
+        menuPosition={menuPosition}
+        selected={selected}
+        align={align}
+        onAlignChange={handleAlignChange}
+        onDownload={handleDownload}
+        onDelete={handleDelete}
+      />
       <div className="tiptap-image-row">
         <div
           className="tiptap-image-container"

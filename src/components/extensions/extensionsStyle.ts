@@ -4,6 +4,7 @@ import { StyledTable } from './table/style'
 import { StyledTaskList } from './TaskList/style'
 import { SlashCommandDecorationStyle } from './SlashCommand/style'
 import { SelectedNodeStyle } from './DragHandle/style'
+import { StyledImageGlobalStyle } from './Image/style'
 
 export const StyledExtensions = css`
   ${StyledStarterKit}
@@ -11,4 +12,5 @@ export const StyledExtensions = css`
   ${StyledTaskList}
   ${SlashCommandDecorationStyle}
   ${SelectedNodeStyle}
+  ${StyledImageGlobalStyle}
 `
