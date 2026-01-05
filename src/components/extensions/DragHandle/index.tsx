@@ -3,6 +3,7 @@ import { DragHandle } from '@tiptap/extension-drag-handle-react'
 import { Editor } from '@tiptap/react'
 import { Plus, GripVertical } from 'lucide-react'
 import { NodeSelection, TextSelection } from '@tiptap/pm/state'
+import { CellSelection, TableMap } from '@tiptap/pm/tables'
 import { HandleContainer, ActionButton, DragIconWrapper } from './style'
 
 interface GlobalDragHandleProps {
@@ -24,6 +25,18 @@ export const GlobalDragHandle = ({ editor }: GlobalDragHandleProps) => {
   const selectCurrentNode = useCallback(() => {
     if (!currentNode) return
     const { state, dispatch } = editor.view
+    const node = currentNode.node
+
+    if (node?.type?.name === 'table') {
+      const tableStart = currentNode.pos + 1
+      const map = TableMap.get(node)
+      const firstCellPos = tableStart + map.map[0]
+      const lastCellPos = tableStart + map.map[map.map.length - 1]
+      const selection = CellSelection.create(state.doc, firstCellPos, lastCellPos)
+      dispatch(state.tr.setSelection(selection))
+      return
+    }
+
     const selection = NodeSelection.create(state.doc, currentNode.pos)
     dispatch(state.tr.setSelection(selection))
   }, [currentNode, editor.view])

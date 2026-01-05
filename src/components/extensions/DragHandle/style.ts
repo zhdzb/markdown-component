@@ -62,7 +62,7 @@ export const DragIconWrapper = styled.div`
 `
 export const SelectedNodeStyle = css`
   /* 选中节点高亮（拖拽句柄触发的 NodeSelection） */
-  .tiptap.ProseMirror .ProseMirror-selectednode:not(img):not(pre):not(.react-renderer) {
+  .tiptap.ProseMirror .ProseMirror-selectednode:not(img):not(pre):not(.react-renderer):not(.table) {
     background-color: var(--selected-node-bg-color);
   }
 

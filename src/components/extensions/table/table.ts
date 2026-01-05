@@ -37,7 +37,6 @@ export const CustomTable = Table.extend({
 
       const dom = document.createElement('div')
       dom.setAttribute('data-content-type', 'table')
-      dom.className = 'table'
       const wrapper = document.createElement('div')
       wrapper.className = 'tp-table-wrapper tp-table-wrapper-no-scroll-y'
 
